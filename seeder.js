@@ -3,6 +3,7 @@ const fs = require('fs')
 const colors = require('colors')
 const dotenv = require('dotenv')
 const Bootcamp = require('./models/Bootcamp')
+const Course = require('./models/Course')
 dotenv.config({path : './config/config.env'})
 
 //connect with the db its different than the server file
@@ -17,12 +18,16 @@ mongoose.connect(process.env.MONGO_URI , {
 const bootcamps = JSON.parse(
     fs.readFileSync(`${__dirname}/_data/bootcamps.json`)
 )
+const courses = JSON.parse(
+    fs.readFileSync(`${__dirname}/_data/courses.json`)
+)
 
 //Import into DB
 
 const importData = async () => {
     try {
         await Bootcamp.create(bootcamps)
+        await Course.create(courses)
         console.log('Data Imported ....'.green.inverse)
         process.exit()
     } catch (error) {
@@ -33,6 +38,7 @@ const importData = async () => {
 const deleteData = async () => {
     try {
         await Bootcamp.deleteMany()
+        await Course.deleteMany()
         console.log('Data Deleted ....'.red.inverse)
         process.exit()
     } catch (error) {
