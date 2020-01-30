@@ -8,9 +8,9 @@ const errorHandler = (err,req,res,next) => {
         const message = `Bootcqmp not found with id of ${err.value}`
         error = new ErrorResponse(message,404)
     }
-    if(err.code =11000)
+    if(err.code === 11000)
     {
-        const messsage =`Duplicate field value entered`
+        const message = 'Duplicate field entered'
         error = new ErrorResponse(message,404)
     }
     if(err.name === 'ValidationError')
