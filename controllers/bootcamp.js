@@ -6,10 +6,49 @@ const ErrorResponse = require('../utils/errorResponse')
 // @route           GET /api/v1/bootcamps
 // @access          Public
 exports.getBootcamps =asyncHandler( async (req,res,next) => {
-        let queryStr = JSON.stringify(req.query)
+       
+        //copy req.query
+        const reqQuery = {...req.query }
+        
+        //field to exclude
+        const removeFields = ['select','sort']
+
+        //loop over remove fields and delete them from rrqquery
+        removeFields.forEach(param => delete reqQuery[param])
+
+        //create query string
+        let queryStr = JSON.stringify(reqQuery)
+
+        //create operators
         queryStr = queryStr.replace(/\b(gt|gte|lte|lt|in)\b/g,match => `$${match}`)
+        
+        //Finding Resource
         query = Bootcamp.find(JSON.parse(queryStr))
 
+        //SELECT Fields
+        if(req.query.select)
+        {
+            const fields = req.query.select.split(',').join(' ')
+            query = query.select(fields)
+        }
+        if(req.query.sort) {
+            const sortBy = req.query.select.split(',').join(' ')
+            query =  query.sort(sortBy)
+        } else {
+            query = query.sort('-createdAt')
+        }
+
+
+        //ADDING PAGINATION
+         const page = parseInt(req.query.page, 10) || 1
+         const limit = parseInt(req.query.limit, 10) || 1
+         const skip = (page - 1) * limit
+
+
+         query = query.skip(skip).limit(limit)   
+
+
+        //Executing Query
         const bootcamps = await query
         res.status(200).json({ success : true ,data : bootcamps})
 
