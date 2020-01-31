@@ -1,6 +1,7 @@
 const express = require('express')
 const dotenv = require('dotenv')
 const bootcamps = require('./routes/bootcamp') //Rout files
+const courses = require('./routes/courses')
 const logger = require('./middleware/logger')
 const morgan = require('morgan') //it is used for custom logging
 const connectDB = require('./config/db')
@@ -25,6 +26,8 @@ if(process.env.NODE_ENV === 'development')
 
 //Mount  the Route
 app.use('/api/v1/bootcamps',bootcamps)
+app.use('/api/v1/courses',courses)
+
 app.use(errorHandler)
 
 const PORT = process.env.PORT || 5000
