@@ -31,7 +31,7 @@ const importData = async () => {
         console.log('Data Imported ....'.green.inverse)
         process.exit()
     } catch (error) {
-        console.log(err)
+        console.log(error)
     }
 }
 //DElete data
