@@ -8,6 +8,7 @@ const connectDB = require('./config/db')
 const colors = require('colors')
 const path = require('path')
 const fileUpload = require('express-fileupload')
+const auth = require('./routes/auth')
 const errorHandler = require('./middleware/error')
 
 
@@ -34,6 +35,7 @@ app.use(express.static(path.join(__dirname,'public')))
 //Mount  the Route
 app.use('/api/v1/bootcamps',bootcamps)
 app.use('/api/v1/courses',courses)
+app.use('/api/v1/auth',auth)
 
 app.use(errorHandler)
 
