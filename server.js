@@ -6,6 +6,8 @@ const logger = require('./middleware/logger')
 const morgan = require('morgan') //it is used for custom logging
 const connectDB = require('./config/db')
 const colors = require('colors')
+const path = require('path')
+const fileUpload = require('express-fileupload')
 const errorHandler = require('./middleware/error')
 
 
@@ -23,6 +25,11 @@ app.use(express.json())
 if(process.env.NODE_ENV === 'development')
 { app.use(morgan('dev')) }
 
+//File uploading
+app.use(fileUpload())
+
+//set Static Folder
+app.use(express.static(path.join(__dirname,'public')))
 
 //Mount  the Route
 app.use('/api/v1/bootcamps',bootcamps)
