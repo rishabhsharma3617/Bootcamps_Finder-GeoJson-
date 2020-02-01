@@ -3,6 +3,7 @@ const fs = require('fs')
 const colors = require('colors')
 const dotenv = require('dotenv')
 const Bootcamp = require('./models/Bootcamp')
+const User = require('./models/user')
 const Course = require('./models/Course')
 dotenv.config({path : './config/config.env'})
 
@@ -21,13 +22,16 @@ const bootcamps = JSON.parse(
 const courses = JSON.parse(
     fs.readFileSync(`${__dirname}/_data/courses.json`)
 )
-
+const users = JSON.parse(
+    fs.readFileSync(`${__dirname}/_data/users.json`)
+)
 //Import into DB
 
 const importData = async () => {
     try {
         await Bootcamp.create(bootcamps)
         await Course.create(courses)
+        await User.create(users)
         console.log('Data Imported ....'.green.inverse)
         process.exit()
     } catch (error) {
@@ -39,6 +43,7 @@ const deleteData = async () => {
     try {
         await Bootcamp.deleteMany()
         await Course.deleteMany()
+        await User.deleteMany()
         console.log('Data Deleted ....'.red.inverse)
         process.exit()
     } catch (error) {
