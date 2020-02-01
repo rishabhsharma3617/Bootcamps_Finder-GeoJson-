@@ -10,7 +10,7 @@ const path = require('path')
 const fileUpload = require('express-fileupload')
 const auth = require('./routes/auth')
 const errorHandler = require('./middleware/error')
-
+const cookieParser = require('cookie-parser')
 
 //Load Env Variables
 dotenv.config({ path: './config/config.env'})
@@ -21,6 +21,9 @@ const app = express()
 
 //using the body parser 
 app.use(express.json())
+
+//Cookie Parser
+app.use(cookieParser)
 
 //our own custom logger
 if(process.env.NODE_ENV === 'development')

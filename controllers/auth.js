@@ -18,5 +18,50 @@ exports.register = asyncHandler(async (req,res,next) => {
         role
     })
     
-    res.status(200).json({ succes : true })
+    sendTokenResponse(user,200,res)
 })
+
+
+
+
+// @desc            Login User
+// @route           POST /api/v1/auth/login
+// @access          Public
+exports.login = asyncHandler(async (req,res,next) => {
+    const { email, password} = req.body
+   //Validate email and Password
+    if(!email || !password)
+    {
+        return next(new ErrorResponse('Please Provide an email and password',400))
+    }
+    const user = await User.findOne({ email : email}).select('+password')
+
+    if(!user) { 
+        return next(new ErrorResponse('Invalid Credentials',401))
+    }
+
+    //Check if password matches 
+    const isMAtch = await user.matchPassword(password)
+    
+    if(!isMAtch){
+        return next(new ErrorResponse('Invalid Credentials',401))
+    }
+
+    sendTokenResponse(user,200,res)
+})
+
+// Get token from model,create cookie and send Token response
+const sendTokenResponse = (user , statusCode ,res) => {
+    console.log('shhsghdsgdhsgdhsgd')
+    const token = user.getSignedJwtToken()
+    const options = {
+        expires : new Date(Date.now() + process.env.JWT_COOKIE_EXPIRE * 24 *60 * 60 * 1),
+        httpOnly : true
+    }
+ res.status(statusCode)
+    .cookie('token',token,options)
+    .json({
+        success : true,
+        token
+    })
+}
